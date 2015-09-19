@@ -3,15 +3,16 @@ Created on Sep 11, 2015
 
 @author: jaaronxavier
 '''
+import tldextract
 from scrapy.spiders import CrawlSpider, Rule 
+from scrapy.linkextractors.lxmlhtml import LxmlLinkExtractor
 from scrapy.selector import Selector
-from scrapy.linkextractors import LinkExtractor
+from jobcrawler.jobcrawler.items import JobsPagesItem
+from jobcrawler.jobcrawler.config import domainlist, starturls, whitelist,\
+    blacklist, keys
 
-domainlist = ['docker.com']
-starturls = ['http://docker.com']
-
-class JobLinkExtractor(LinkExtractor):
-    allow = 
+whitelist_regex = '|'.join(whitelist)
+blacklist_regex = '|'.join(blacklist)
 
 class JobPageFinder(CrawlSpider):
     '''The idea here is that this crawler hits a homepage, follows its most
@@ -21,10 +22,30 @@ class JobPageFinder(CrawlSpider):
     name = 'jobpagefinder'
     allowed_domains = domainlist
     start_urls = starturls
-    
+     
     rules = (
-             Rule(
-             
-             
-             
+             Rule (
+                  LxmlLinkExtractor (
+                                    allow= '/{}/g'.format(whitelist_regex), 
+                                    deny= '/{}/g'.format(blacklist_regex, 
+                                    follow=True), 
+                                    ),
+                  callback="parse_items",
+                  ),
              )
+             
+    def parse_items(self, response):
+        item = JobsPagesItem
+        keys = keys
+        sel = Selector(response)
+        if any(key in response.body for key in keys):
+           ext = tldextract.extract(response.url)
+           item['company'] = ext.domain
+           item['jobtitle'] = sel.xpath('//title/text()').extract()
+           item['link'] = response.url
+           yield item
+         
+            
+             
+    
+    
