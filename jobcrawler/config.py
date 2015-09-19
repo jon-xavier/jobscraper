@@ -3,8 +3,8 @@ Created on Sep 18, 2015
 
 @author: jaaronxavier
 '''
-domainlist = ['wepay.com']
-starturls = ['http:www.wepay.com']
-whitelist = ['careers' , 'hiring' , 'about']
-blacklist = ['products']
+domainlist = ['craigslist.com']
+starturls = ['https://sfbay.craigslist.org/search/sby/jjj']
+whitelist = ['(products)', '(careers)', '(hiring)' , '(about)', '(jobs)']
+blacklist = []
 keys = ['marketing', 'journalism', 'journalist', 'copywriting', 'communications', 'copywriter']

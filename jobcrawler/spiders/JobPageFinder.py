@@ -7,8 +7,8 @@ import tldextract
 from scrapy.spiders import CrawlSpider, Rule 
 from scrapy.linkextractors.lxmlhtml import LxmlLinkExtractor
 from scrapy.selector import Selector
-from jobcrawler.jobcrawler.items import JobsPagesItem
-from jobcrawler.jobcrawler.config import domainlist, starturls, whitelist,\
+from jobcrawler.items import JobsPagesItem
+from jobcrawler.config import domainlist, starturls, whitelist,\
     blacklist, keys
 
 whitelist_regex = '|'.join(whitelist)
@@ -36,10 +36,10 @@ class JobPageFinder(CrawlSpider):
              
     def parse_items(self, response):
         item = JobsPagesItem
-        keys = keys
         sel = Selector(response)
+        print response.url
         if any(key in response.body for key in keys):
-           ext = tldextract.extract(response.url)
+           #ext = tldextract.extract(response.url)
            item['company'] = ext.domain
            item['jobtitle'] = sel.xpath('//title/text()').extract()
            item['link'] = response.url
